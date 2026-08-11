@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Chatify AI Pricing — Choose the plan that fits your research needs">
+<meta name="theme-color" content="#0a0a16">
+<title>Pricing — Chatify AI</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --cyan: #00d9ff;
+    --purple: #b024ff;
+    --pink: #ff006e;
+    --blue: #0080ff;
+    --lime: #39ff14;
+    --success: #2fe3a3;
+    --error: #ff5470;
+    --warning: #ffb020;
+
+    --bg-0: #f6f7fb;
+    --bg-1: #ffffff;
+    --bg-2: #eef0f7;
+    --ink-0: #10101c;
+    --ink-1: #464a5e;
+    --ink-2: #6b7184;
+    --line: #dfe2ef;
+    --glass: rgba(255, 255, 255, 0.6);
+
+    --sp-1: 0.4rem;
+    --sp-2: 0.8rem;
+    --sp-3: 1.2rem;
+    --sp-4: 1.6rem;
+    --sp-5: 2.4rem;
+    --sp-6: 3.2rem;
+
+    --radius-s: 0.6rem;
+    --radius-m: 1rem;
+    --radius-l: 1.4rem;
+
+    --font-display: "Space Grotesk", "Inter", sans-serif;
+    --font-body: "Inter", -apple-system, sans-serif;
+    --font-mono: "Menlo", monospace;
+
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --fast: 140ms var(--ease);
+    --base: 240ms var(--ease);
+}
+
+html.dark {
+    --bg-0: #0a0a16;
+    --bg-1: #12121f;
+    --bg-2: #191929;
+    --ink-0: #f5f6fb;
+    --ink-1: #c6cae0;
+    --ink-2: #8b90ab;
+    --line: #2a2b42;
+    --glass: rgba(20, 20, 36, 0.55);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
+
+body {
+    font-family: var(--font-body);
+    background: var(--bg-0);
+    color: var(--ink-0);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color var(--base), color var(--base);
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(60vw 40vh at 85% -5%, rgba(176, 36, 255, 0.10), transparent 60%), radial-gradient(50vw 35vh at -5% 10%, rgba(0, 217, 255, 0.08), transparent 60%);
+    pointer-events: none;
+}
+
+h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; letter-spacing: -0.01em; line-height: 1.25; color: var(--ink-0); }
+h1 { font-size: 2.5rem; }
+h2 { font-size: 1.75rem; }
+h3 { font-size: 1.25rem; }
+
+p { color: var(--ink-2); line-height: 1.7; }
+
+:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: var(--radius-s); }
+
+.shell { min-height: 100vh; display: flex; flex-direction: column; }
+
+.topbar { position: sticky; top: 0; z-index: 40; display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); padding: var(--sp-3) var(--sp-5); background: var(--glass); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
+
+.brand { display: flex; align-items: center; gap: var(--sp-2); font-family: var(--font-display); font-weight: 600; font-size: 1rem; color: var(--ink-0); text-decoration: none; }
+
+.brand-mark { width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; background: linear-gradient(135deg, var(--cyan), var(--purple)); color: #05050a; font-weight: 700; font-size: 0.85rem; }
+
+.topbar-actions { display: flex; align-items: center; gap: var(--sp-2); }
+
+.theme-switch { display: inline-flex; padding: 3px; gap: 2px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 999px; }
+
+.theme-switch button { border: none; background: transparent; color: var(--ink-2); width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; cursor: pointer; font-size: 0.95rem; transition: background var(--fast), color var(--fast); }
+
+.theme-switch button.active { background: var(--bg-1); color: var(--cyan); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); }
+
+.main { flex: 1; width: 100%; max-width: 1200px; margin: 0 auto; padding: var(--sp-6) var(--sp-4); }
+
+.hero { text-align: center; margin-bottom: var(--sp-6); }
+.hero h1 { margin-bottom: var(--sp-2); font-size: 2.5rem; }
+.hero p { color: var(--ink-2); font-size: 1.1rem; max-width: 600px; margin: 0 auto var(--sp-4); }
+
+.pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-5); margin-bottom: var(--sp-6); }
+
+.pricing-card { background: var(--bg-1); border: 1px solid var(--line); border-radius: var(--radius-l); padding: var(--sp-5); display: flex; flex-direction: column; transition: border-color var(--fast), transform var(--fast); }
+
+.pricing-card:hover { border-color: rgba(0, 217, 255, 0.35); transform: translateY(-4px); }
+
+.pricing-card.featured { border: 2px solid var(--cyan); box-shadow: 0 0 0 1px rgba(0, 217, 255, 0.4), 0 0 24px rgba(0, 217, 255, 0.22); }
+
+.pricing-label { display: inline-block; font-family: var(--font-display); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--cyan); margin-bottom: var(--sp-3); }
+
+.pricing-title { font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; margin-bottom: 6px; }
+
+.pricing-desc { font-size: 0.9rem; color: var(--ink-2); margin-bottom: var(--sp-3); }
+
+.pricing-price { display: flex; align-items: baseline; gap: 6px; margin-bottom: var(--sp-4); }
+
+.pricing-price .amount { font-family: var(--font-display); font-size: 2.2rem; font-weight: 700; }
+
+.pricing-price .period { color: var(--ink-2); font-size: 0.9rem; }
+
+.pricing-features { flex: 1; margin-bottom: var(--sp-4); }
+
+.feature-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 0.9rem; }
+
+.feature-item:last-child { border-bottom: none; }
+
+.feature-check { flex-shrink: 0; width: 20px; height: 20px; display: grid; place-items: center; color: var(--success); font-weight: 700; }
+
+.btn { min-height: 44px; padding: 0 var(--sp-4); border-radius: var(--radius-s); font-size: 0.9rem; font-weight: 600; cursor: pointer; border: 1px solid transparent; transition: transform var(--fast), box-shadow var(--fast), background var(--fast); }
+
+.btn-primary { background: linear-gradient(135deg, var(--cyan), var(--blue)); color: #05050a; width: 100%; box-shadow: 0 0 0 1px rgba(0, 217, 255, 0.4), 0 0 24px rgba(0, 217, 255, 0.22); }
+
+.btn-primary:hover { filter: brightness(1.06); }
+
+.btn-secondary { background: transparent; border: 1px solid var(--line); color: var(--ink-1); width: 100%; }
+
+.btn-secondary:hover { border-color: var(--cyan); color: var(--cyan); }
+
+.faq { margin-top: var(--sp-6); }
+
+.faq h2 { margin-bottom: var(--sp-4); text-align: center; }
+
+.faq-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-4); }
+
+.faq-item { background: var(--bg-1); border: 1px solid var(--line); border-radius: var(--radius-l); padding: var(--sp-4); cursor: pointer; transition: border-color var(--fast); }
+
+.faq-item:hover { border-color: rgba(0, 217, 255, 0.35); }
+
+.faq-item h3 { font-size: 1rem; margin-bottom: var(--sp-2); }
+
+.faq-item p { font-size: 0.85rem; max-height: 0; overflow: hidden; transition: max-height var(--base); }
+
+.faq-item.open p { max-height: 200px; }
+
+@media (max-width: 1024px) {
+    .pricing-grid { grid-template-columns: 1fr; }
+    .faq-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+    .main { padding: var(--sp-4) var(--sp-3); }
+    .hero h1 { font-size: 1.75rem; }
+}
+
+        .logo-img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            display: block;
+        }
+        </style>
+</head>
+<body>
+
+<div class="shell">
+    <header class="topbar">
+        <a href="index.html" class="brand">
+            <img src="IMAGE.png" alt="Chaitify AI" class="logo-img">
+            <span>Chatify</span>
+        </a>
+        <div class="topbar-actions">
+            <div class="theme-switch" role="group" aria-label="Theme">
+                <button type="button" data-theme="light" aria-pressed="false">☀</button>
+                <button type="button" data-theme="dark" aria-pressed="false">☾</button>
+                <button type="button" data-theme="system" aria-pressed="true">◐</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="hero">
+            <h1>Simple, transparent pricing</h1>
+            <p>Choose the plan that fits your research needs. Pay only for what you use.</p>
+        </div>
+
+        <div class="pricing-grid">
+            <!-- Free Plan -->
+            <div class="pricing-card">
+                <span class="pricing-label">Most Popular</span>
+                <h3 class="pricing-title">Free</h3>
+                <p class="pricing-desc">Perfect for getting started</p>
+                <div class="pricing-price">
+                    <span class="amount">$0</span>
+                    <span class="period">forever</span>
+                </div>
+                <ul class="pricing-features">
+                    <li class="feature-item"><span class="feature-check">✓</span> 100 chats per month</li>
+                    <li class="feature-item"><span class="feature-check">✓</span> 1 research project</li>
+                    <li class="feature-item"><span class="feature-check">✓</span> Basic model (Chatify Fast)</li>
+                    <li class="feature-item"><span class="feature-check">✓</span> Community support</li>
+                </ul>
+                <button class="btn btn-secondary">Get started</button>
+            </div>
+
+            <!-- Pro Plan (Featured) -->
+            <div class="pricing-card featured">
+                <span class="pricing-label">Recommended</span>
+                <h3 class="pricing-title">Pro</h3>
+                <p class="pricing-desc">For serious researchers</p>
+                <div class="pricing-price">
+                    <span class="amount">$29</span>
+                    <span class="period">/month</span>
+                </div>
+                <ul class="pricing-features">
+                    <li class="feature-item"><span class="feature-check">✓</span> Unlimited chats</li>
+                    <li class="feature-item"><span class="feature-check">✓</span> 10 research projects</li>
+                    <li class="feature-item"><span class="feature-check">✓</span> All AI models (Pro + Research)</li>
+                    <li class="feature-item"><span class="feature-check">✓</span> Priority email support</li>
+                    <li class="feature-item"><span class="feature-check">✓</span> Export to PDF/Markdown</li>
+                </ul>
+                <button class="btn btn-primary">Start free trial</button>
+            </div>
+
+            <!-- Enterprise Plan -->
+            <div class="pricing-card">
+                <span class="pricing-label">Scale</span>
+                <h3 class="pricing-title">Enterprise</h3>
+                <p class="pricing-desc">For teams & organizations</p>
+                <div class="pricing-price">
+                    <span class="amount">Custom</span>
+                </div>
+                <ul class="pricing-features">
+                    <li class="feature-item"><span class="feature-check">✓</span> Unlimited everything</li>
+                    <li class="feature-item"><span class="feature-check">✓</span> Team management</li>
+                    <li class="feature-item"><span class="feature-check">✓</span> SSO + SAML</li>
+                    <li class="feature-item"><span class="feature-check">✓</span> Dedicated support</li>
+                    <li class="feature-item"><span class="feature-check">✓</span> Custom integrations</li>
+                </ul>
+                <button class="btn btn-secondary" onclick="location.href='mailto:sales@chatify.ai?subject=Enterprise%20Plan'">Contact sales</button>
+            </div>
+        </div>
+
+        <!-- FAQ -->
+        <section class="faq">
+            <h2>Frequently asked questions</h2>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <h3>Can I change plans anytime?</h3>
+                    <p>Yes! You can upgrade or downgrade at any time. Changes take effect at your next billing cycle.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Is there a free trial for Pro?</h3>
+                    <p>Yes! Get 30 days free to explore all Pro features. No credit card required.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>What happens if I exceed my limits?</h3>
+                    <p>We'll notify you when approaching limits. You can upgrade or purchase additional usage.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Do you offer discounts for annual billing?</h3>
+                    <p>Yes! Pay annually and save 20% on Pro and Enterprise plans.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script>
+const themeButtons = document.querySelectorAll('[data-theme]');
+const media = window.matchMedia('(prefers-color-scheme: dark)');
+
+function applyTheme(mode) {
+    const resolved = mode === 'system' ? (media.matches ? 'dark' : 'light') : mode;
+    document.documentElement.classList.toggle('dark', resolved === 'dark');
+    themeButtons.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.theme === mode);
+        btn.setAttribute('aria-pressed', btn.dataset.theme === mode ? 'true' : 'false');
+    });
+    localStorage.setItem('chatify_theme', mode);
+}
+
+function initTheme() {
+    applyTheme(localStorage.getItem('chatify_theme') || 'system');
+}
+
+themeButtons.forEach(btn => btn.addEventListener('click', () => applyTheme(btn.dataset.theme)));
+initTheme();
+
+// FAQ Toggle
+document.querySelectorAll('.faq-item').forEach(item => {
+    item.addEventListener('click', () => item.classList.toggle('open'));
+});
+</script>
+
+</body>
+</html>

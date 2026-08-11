@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatify AI - Advanced AI Research for Everyone</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Video Container Styles */
+        .video-intro {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: #000;
+            overflow: hidden;
+        }
+
+        .video-intro video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            max-width: 1200px;
+            max-height: 800px;
+        }
+
+        .video-overlay {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 10;
+        }
+
+        .skip-video-btn {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 12px 30px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .skip-video-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+
+        /* Existing styles continue... */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 5%;
+            backdrop-filter: blur(10px);
+            background: rgba(10, 14, 39, 0.8);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 1;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 5%;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            color: #667eea;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            opacity: 0.8;
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.6;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin-top: 0.5rem;
+        }
+
+        section {
+            margin: 5rem 0;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            opacity: 0.7;
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+            border-color: rgba(102, 126, 234, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .feature p {
+            opacity: 0.7;
+            line-height: 1.6;
+        }
+
+        .capabilities {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .capability {
+            display: flex;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .capability-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .capability-content h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .capability-content p {
+            opacity: 0.7;
+            font-size: 0.95rem;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .step {
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin: 0 auto 1.5rem;
+        }
+
+        .step h3 {
+            margin-bottom: 0.75rem;
+            font-size: 1.2rem;
+        }
+
+        .step p {
+            opacity: 0.7;
+            font-size: 0.95rem;
+        }
+
+        .testimonials {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .testimonial {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .testimonial-stars {
+            color: #fbbf24;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .author-info h4 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .author-info p {
+            font-size: 0.85rem;
+            opacity: 0.7;
+        }
+
+        .faq {
+            max-width: 800px;
+            margin: 3rem auto 0;
+        }
+
+        .faq-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .faq-question:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem 1.5rem;
+            opacity: 0.8;
+            line-height: 1.6;
+            display: none;
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+
+        .faq-toggle {
+            font-size: 1.5rem;
+            transition: transform 0.3s;
+        }
+
+        .faq-item.active .faq-toggle {
+            transform: rotate(45deg);
+        }
+
+        footer {
+            background: rgba(0, 0, 0, 0.3);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 3rem 5%;
+            margin-top: 5rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: #fff;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.7;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .social-links a:hover {
+            background: rgba(102, 126, 234, 0.3);
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .video-intro video {
+                max-height: 500px;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    
+        .logo-img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            display: block;
+        }
+        </style>
+</head>
+<body>
+    <!-- Video Introduction Section -->
+    <section class="video-intro" id="videoIntro">
+        <video autoplay muted loop playsinline id="introVideo">
+            <source src="https://raw.githubusercontent.com/veer995020/VIDEOS/refs/heads/main/VIDEO.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay">
+            <a href="#mainContent" class="skip-video-btn" onclick="scrollToMain()">Skip to Content ↓</a>
+        </div>
+        <div class="scroll-indicator">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M12 5v14M19 12l-7 7-7-7"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Main Navigation -->
+    <nav>
+        <a href="index.html" class="logo">
+            <img src="IMAGE.png" alt="Chaitify AI" class="logo-img">
+            <span>Chatify AI</span>
+        </a>
+        <div class="nav-links">
+            <a href="#features">Features</a>
+            <a href="#capabilities">Capabilities</a>
+            <a href="#how">How It Works</a>
+            <a href="#faq">FAQ</a>
+            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">🌙</button>
+            <a href="signup-step-1.html" class="cta-button">Sign Up</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="mainContent">
+        <section class="hero">
+            <div class="hero-badge">
+                <span>✨</span>
+                <span>Introducing Chatify AI</span>
+            </div>
+            <h1>Advanced AI Research<br>for Everyone</h1>
+            <p>Compare multiple AI models in one place. Research faster. Get smarter insights instantly. No technical knowledge required.</p>
+            <div class="hero-buttons">
+                <a href="signup-step-1.html" class="btn-primary">
+                    <span>Start Free Trial</span>
+                    <span>→</span>
+                </a>
+                <a href="#videoIntro" class="btn-secondary" onclick="playVideo()">
+                    <span>▶</span>
+                    <span>Watch Demo</span>
+                </a>
+            </div>
+            
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-number">10K+</div>
+                    <div class="stat-label">Active Users</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">AI Models</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">99.9%</div>
+                    <div class="stat-label">Uptime</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">2M+</div>
+                    <div class="stat-label">Searches Daily</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features">
+            <h2 class="section-title">Why Choose Chatify AI</h2>
+            <p class="section-subtitle">Everything you need to research smarter, faster, and better</p>
+            
+            <div class="features-grid">
+                <div class="feature">
+                    <div class="feature-icon">🤖</div>
+                    <h3>Multi-Model Comparison</h3>
+                    <p>Access Mythical, Sonet, and Chatify. Compare responses side-by-side to find the best answer.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Lightning Fast</h3>
+                    <p>Get results in seconds. Optimized infrastructure means no waiting for your research.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🌐</div>
+                    <h3>Real-Time Web Search</h3>
+                    <p>Research with live data. Pull information from the latest sources instantly.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📄</div>
+                    <h3>Upload & Analyze</h3>
+                    <p>Upload PDFs, images, and documents. AI analyzes them instantly.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Privacy First</h3>
+                    <p>Your research is yours. We never sell your data. End-to-end encrypted.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon"></div>
+                    <h3>For Everyone</h3>
+                    <p>Students, researchers, professionals, creators. No technical knowledge needed.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="capabilities">
+            <h2 class="section-title">Launch Capabilities</h2>
+            <p class="section-subtitle">Everything you get from day one</p>
+            
+            <div class="capabilities">
+                <div class="capability">
+                    <div class="capability-number">01</div>
+                    <div class="capability-content">
+                        <h3>AI Research Hub</h3>
+                        <p>Query all major AI models at once. Get diverse perspectives in a single search.</p>
+                    </div>
+                </div>
+                <div class="capability">
+                    <div class="capability-number">02</div>
+                    <div class="capability-content">
+                        <h3>Content Creation</h3>
+                        <p>Generate essays, blog posts, and creative content. Refine with AI feedback.</p>
+                    </div>
+                </div>
+                <div class="capability">
+                    <div class="capability-number">03</div>
+                    <div class="capability-content">
+                        <h3>Code Generation</h3>
+                        <p>Write code in any language. Get explanations and optimizations instantly.</p>
+                    </div>
+                </div>
+                <div class="capability">
+                    <div class="capability-number">04</div>
+                    <div class="capability-content">
+                        <h3>Data Analysis</h3>
+                        <p>Upload datasets. Get insights, trends, and visualizations automatically.</p>
+                    </div>
+                </div>
+                <div class="capability">
+                    <div class="capability-number">05</div>
+                    <div class="capability-content">
+                        <h3>Document Processing</h3>
+                        <p>Upload any document. Summarize, extract data, or ask questions instantly.</p>
+                    </div>
+                </div>
+                <div class="capability">
+                    <div class="capability-number">06</div>
+                    <div class="capability-content">
+                        <h3>Smart Collections</h3>
+                        <p>Organize your research. Save, tag, and share discoveries with one click.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="how">
+            <h2 class="section-title">How It Works</h2>
+            <p class="section-subtitle">Get started in three simple steps</p>
+            
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Sign Up Free</h3>
+                    <p>Create your account in 30 seconds. No credit card required. Get instant access to 2 AI models.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Ask Anything</h3>
+                    <p>Type your question or upload a document. Choose which AI models you want to query.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Get Instant Answers</h3>
+                    <p>Compare AI responses side-by-side. Save your research. Share with teammates.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="testimonials">
+            <h2 class="section-title">Trusted by Researchers</h2>
+            <p class="section-subtitle">See what users are saying about Chatify AI</p>
+            
+            <div class="testimonials">
+                <div class="testimonial">
+                    <div class="testimonial-stars">★★★★★</div>
+                    <p class="testimonial-text">"Chatify AI completely changed how I research. Instead of bouncing between Sonet and Mythical, I get the best models in one place. Saves me hours every week."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">A</div>
+                        <div class="author-info">
+                            <h4>Aisha Kumar</h4>
+                            <p>Researcher, Delhi</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial">
+                    <div class="testimonial-stars">★★★★★</div>
+                    <p class="testimonial-text">"As a student, Chatify helps me understand complex topics from multiple perspectives. The AI comparison feature is incredible."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">R</div>
+                        <div class="author-info">
+                            <h4>Rohan Patel</h4>
+                            <p>Student, Mumbai</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial">
+                    <div class="testimonial-stars">★★★★★</div>
+                    <p class="testimonial-text">"The real-time web search feature is a game-changer. I can research with live data instead of outdated information."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">M</div>
+                        <div class="author-info">
+                            <h4>Maya Singh</h4>
+                            <p>Content Creator, Bangalore</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="faq">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <p class="section-subtitle">Everything you need to know about Chatify AI</p>
+            
+            <div class="faq">
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>Is Chatify AI free?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        Yes! Chatify AI has a free tier that gives you access to 2 AI models and 10 daily searches. Our Pro plan ($15/month) unlocks all models, unlimited searches, file uploads, and priority support.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>Which AI models are supported?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        We support Mythical (advanced reasoning), Sonet (balanced), and Chatify (fast). On the free plan, you get access to Chatify and Sonet. Pro plan includes Mythical for deep research. We're continuously optimizing model performance.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>Is my research private?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        Absolutely. Your research is end-to-end encrypted. We never sell your data or use it for training. You can delete your research anytime. Privacy is our top priority.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>Do I need technical knowledge to use it?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        No. Chatify AI is designed for everyone. You type a question or upload a document, and the AI handles the rest. No coding or technical skills required.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>Can I upload files?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        Yes! Pro plan members can upload PDFs, images, and documents. The AI will analyze them and answer your questions about the content.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>How can I contact support?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        Email us at support@chatify.ai or use the chat widget in the app. Pro plan members get priority support with responses in under 2 hours.
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#capabilities">Capabilities</a></li>
+                    <li><a href="pricing.html">Pricing</a></li>
+                    <li><a href="#roadmap">Roadmap</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="#blog">Blog</a></li>
+                    <li><a href="#careers">Careers</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="#docs">Documentation</a></li>
+                    <li><a href="#api">API</a></li>
+                    <li><a href="#guides">Guides</a></li>
+                    <li><a href="#community">Community</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="terms.html">Terms of Service</a></li>
+                    <li><a href="#security">Security</a></li>
+                    <li><a href="#compliance">Compliance</a></li>
+                </ul>
+                <div class="social-links">
+                    <a href="#" aria-label="Twitter">𝕏</a>
+                    <a href="#" aria-label="LinkedIn">in</a>
+                    <a href="#" aria-label="Settings">⚙</a>
+                    <a href="#" aria-label="Diamond">◆</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 Chatify AI by Legend Inc. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Video Controls
+        function scrollToMain() {
+            event.preventDefault();
+            document.getElementById('mainContent').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function playVideo() {
+            event.preventDefault();
+            const videoSection = document.getElementById('videoIntro');
+            videoSection.scrollIntoView({ behavior: 'smooth' });
+            const video = document.getElementById('introVideo');
+            video.play();
+        }
+
+        // Theme Toggle
+        function toggleTheme() {
+            const btn = document.querySelector('.theme-toggle');
+            const body = document.body;
+            
+            if (body.style.background === 'rgb(255, 255, 255)') {
+                body.style.background = 'linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%)';
+                body.style.color = '#ffffff';
+                btn.textContent = '🌙';
+            } else {
+                body.style.background = 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)';
+                body.style.color = '#1a1f3a';
+                btn.textContent = '☀';
+            }
+        }
+
+        // FAQ Toggle
+        function toggleFaq(element) {
+            const item = element.parentElement;
+            const isActive = item.classList.contains('active');
+            
+            // Close all FAQ items
+            document.querySelectorAll('.faq-item').forEach(faq => {
+                faq.classList.remove('active');
+            });
+            
+            // Open clicked item if it wasn't active
+            if (!isActive) {
+                item.classList.add('active');
+            }
+        }
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href !== '#' && href !== '#videoIntro') {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                }
+            });
+        });
+
+        // Add scroll animation for stats
+        const observerOptions = {
+            threshold: 0.5,
+            rootMargin: '0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe stats
+        document.querySelectorAll('.stat').forEach((stat, index) => {
+            stat.style.opacity = '0';
+            stat.style.transform = 'translateY(20px)';
+            stat.style.transition = `all 0.6s ease ${index * 0.1}s`;
+            observer.observe(stat);
+        });
+
+        // Video ended handler - auto scroll to main content
+        document.getElementById('introVideo').addEventListener('ended', function() {
+            setTimeout(() => {
+                document.getElementById('mainContent').scrollIntoView({ behavior: 'smooth' });
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+/* ============================================================
+   RESPONSIVE SYSTEM — auto-adjusts for all screen sizes
+   ============================================================ */
+
+:root {
+  /* Fluid values scale smoothly between small and large screens */
+  --chat-max-width: 860px;
+  --fs-base:  clamp(0.9rem,  0.85rem + 0.3vw,  1.05rem);
+  --fs-title: clamp(1.4rem,  1.1rem  + 2vw,    2.2rem);
+  --fs-sub:   clamp(0.85rem, 0.8rem  + 0.4vw,  1rem);
+  --space:    clamp(0.75rem, 0.5rem + 1.5vw,  1.5rem);
+  --radius:   clamp(10px, 8px + 0.5vw, 16px);
+}
+
+html { font-size: var(--fs-base); }
+
+/* Layout fills the visible viewport (dvh handles mobile browser bars) */
+body {
+  min-height: 100vh;
+  min-height: 100dvh; /* dynamic viewport — better on phones */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Chat column stays readable — centered, never too wide */
+.chat-container {
+  width: min(100% - calc(var(--space) * 2), var(--chat-max-width));
+  margin-inline: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Suggestion cards — auto-fit handles every width automatically:
+   1 column on phones → 2 on tablets → 4 on desktop */
+.suggestions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
+  gap: calc(var(--space) * 0.75);
+}
+
+/* Comfortable tap/click targets everywhere */
+button, .suggestion-card { min-height: 44px; }
+
+/* ============================================================
+   BREAKPOINTS
+   ============================================================ */
+
+/* ---- Extra-small phones (≤360px) ---- */
+@media (max-width: 360px) {
+  :root { --chat-max-width: 100%; }
+  .suggestions { grid-template-columns: 1fr; }
+  .header-actions button { padding: 0.4rem; }
+}
+
+/* ---- Phones (≤480px) ---- */
+@media (max-width: 480px) {
+  .chat-container { width: 100%; padding-inline: 0.9rem; }
+  .suggestions { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+  .input-area {
+    /* respect iPhone notch / home-bar area */
+    padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+  }
+  .input-hint { display: none; } /* hide "Press Enter…" hint on touch */
+}
+
+/* ---- Tablets (481px – 1024px) ---- */
+@media (min-width: 481px) and (max-width: 1024px) {
+  :root { --chat-max-width: 720px; }
+  .suggestions { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ---- Laptop / Desktop (1025px – 1440px) ---- */
+@media (min-width: 1025px) and (max-width: 1440px) {
+  :root { --chat-max-width: 860px; }
+}
+
+/* ---- Wide screens (1441px – 1920px) ---- */
+@media (min-width: 1441px) and (max-width: 1920px) {
+  :root { --chat-max-width: 960px; }
+}
+
+/* ---- Ultrawide (1921px – 2560px) ---- */
+@media (min-width: 1921px) and (max-width: 2560px) {
+  :root { --chat-max-width: 1080px; }
+}
+
+/* ---- Super-ultrawide (2561px+) ---- */
+@media (min-width: 2561px) {
+  :root { --chat-max-width: 1200px; }
+  html { font-size: 1.15rem; } /* scale everything up slightly */
+}
+
+/* ---- Short landscape phones (e.g. rotated phone) ---- */
+@media (max-height: 500px) and (orientation: landscape) {
+  .welcome h1 { font-size: 1.2rem; margin-block: 0.4rem; }
+  .welcome p  { display: none; }
+  .suggestions { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* ---- Very tall narrow screens — prioritize vertical flow ---- */
+@media (max-width: 480px) and (min-height: 800px) {
+  .welcome { padding-block: 2.5rem; }
+}

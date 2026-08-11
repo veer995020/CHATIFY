@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Chatify AI — Profile and account preferences">
+<meta name="theme-color" content="#0a0a16">
+<title>Account — Chatify AI</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================================
+   DESIGN TOKENS
+   Display: Space Grotesk — geometric, technical, carries the "AI console" voice
+   Body/UI: Inter — quiet, highly legible workhorse
+   Data/Mono: JetBrains Mono — usage stats, plan figures, technical values
+   ============================================================================ */
+
+:root {
+    /* Brand accents */
+    --cyan: #00d9ff;
+    --purple: #b024ff;
+    --pink: #ff006e;
+    --blue: #0080ff;
+    --lime: #39ff14;
+
+    --success: #2fe3a3;
+    --error: #ff5470;
+    --warning: #ffb020;
+
+    /* Light mode surface */
+    --bg-0: #f6f7fb;
+    --bg-1: #ffffff;
+    --bg-2: #eef0f7;
+    --ink-0: #10101c;
+    --ink-1: #464a5e;
+    --ink-2: #767b93;
+    --line: #dfe2ef;
+    --glass: rgba(255, 255, 255, 0.6);
+    --overlay: rgba(10, 10, 22, 0.55);
+    --ring-track: rgba(16, 16, 28, 0.08);
+
+    --shadow-sm: 0 1px 2px rgba(16, 16, 28, 0.06), 0 1px 1px rgba(16, 16, 28, 0.04);
+    --shadow-md: 0 8px 24px rgba(16, 16, 28, 0.08);
+    --shadow-glow: 0 0 0 1px rgba(0, 217, 255, 0.4), 0 0 24px rgba(0, 217, 255, 0.22);
+
+    --sp-1: 0.4rem;
+    --sp-2: 0.8rem;
+    --sp-3: 1.2rem;
+    --sp-4: 1.6rem;
+    --sp-5: 2.4rem;
+    --sp-6: 3.2rem;
+
+    --radius-s: 0.6rem;
+    --radius-m: 1rem;
+    --radius-l: 1.4rem;
+    --radius-full: 999px;
+
+    --font-display: "Space Grotesk", "Inter", sans-serif;
+    --font-body: "Inter", -apple-system, sans-serif;
+    --font-mono: "JetBrains Mono", "Menlo", monospace;
+
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --fast: 140ms var(--ease);
+    --base: 240ms var(--ease);
+}
+
+html.dark {
+    --bg-0: #0a0a16;
+    --bg-1: #12121f;
+    --bg-2: #191929;
+    --ink-0: #f5f6fb;
+    --ink-1: #c6cae0;
+    --ink-2: #8b90ab;
+    --line: #2a2b42;
+    --glass: rgba(20, 20, 36, 0.55);
+    --overlay: rgba(4, 4, 10, 0.7);
+    --ring-track: rgba(255, 255, 255, 0.08);
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.45);
+    --shadow-glow: 0 0 0 1px rgba(0, 217, 255, 0.5), 0 0 28px rgba(0, 217, 255, 0.3);
+}
+
+/* ============================================================================
+   RESET & BASE
+   ============================================================================ */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
+
+body {
+    font-family: var(--font-body);
+    background: var(--bg-0);
+    color: var(--ink-0);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color var(--base), color var(--base);
+}
+
+/* Ambient backdrop — quiet radial glow */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background:
+        radial-gradient(60vw 40vh at 85% -5%, rgba(176, 36, 255, 0.10), transparent 60%),
+        radial-gradient(50vw 35vh at -5% 10%, rgba(0, 217, 255, 0.08), transparent 60%);
+    pointer-events: none;
+}
+
+h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+    color: var(--ink-0);
+}
+
+a { color: var(--cyan); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+button, input, select, textarea { font-family: inherit; color: inherit; }
+
+:focus { outline: none; }
+:focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 3px;
+    border-radius: var(--radius-s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+::selection { background: rgba(0, 217, 255, 0.25); }
+
+code, .mono { font-family: var(--font-mono); }
+
+/* ============================================================================
+   SHELL
+   ============================================================================ */
+
+.shell { min-height: 100vh; display: flex; flex-direction: column; }
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-3);
+    padding: var(--sp-3) var(--sp-5);
+    background: var(--glass);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--ink-0);
+}
+
+.brand-mark {
+    width: 30px;
+    height: 30px;
+    border-radius: 9px;
+    display: grid;
+    place-items: center;
+    background: conic-gradient(from 220deg, var(--cyan), var(--purple), var(--pink), var(--cyan));
+    color: #05050a;
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+.crumb { color: var(--ink-2); font-size: 0.9rem; }
+
+.topbar-actions { display: flex; align-items: center; gap: var(--sp-2); }
+
+.theme-switch {
+    display: inline-flex;
+    padding: 3px;
+    gap: 2px;
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-full);
+}
+
+.theme-switch button {
+    border: none;
+    background: transparent;
+    color: var(--ink-2);
+    width: 34px;
+    height: 34px;
+    border-radius: var(--radius-full);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: background var(--fast), color var(--fast);
+}
+
+.theme-switch button.active {
+    background: var(--bg-1);
+    color: var(--cyan);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-back {
+    min-height: 40px;
+    padding: 0 var(--sp-3);
+    border-radius: var(--radius-full);
+    border: 1px solid var(--line);
+    background: var(--bg-1);
+    color: var(--ink-1);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color var(--fast), color var(--fast);
+}
+.btn-back:hover { border-color: var(--cyan); color: var(--cyan); }
+
+/* ============================================================================
+   MAIN CONTENT
+   ============================================================================ */
+
+.main {
+    flex: 1;
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: var(--sp-5) var(--sp-4) var(--sp-6);
+}
+
+.page-lede { margin-bottom: var(--sp-4); }
+.page-lede h1 { font-size: 1.7rem; margin-bottom: 4px; }
+.page-lede p { color: var(--ink-2); font-size: 0.95rem; }
+
+/* Rail tabs — node + connecting underline */
+.rail-nav {
+    position: relative;
+    display: flex;
+    gap: var(--sp-5);
+    margin-bottom: var(--sp-5);
+    padding-bottom: 2px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+.rail-nav::-webkit-scrollbar { display: none; }
+
+.rail-nav::before {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 1px;
+    background: var(--line);
+}
+
+.rail-tab {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    background: none;
+    border: none;
+    padding: var(--sp-2) 0 var(--sp-3);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--ink-2);
+    cursor: pointer;
+    white-space: nowrap;
+    min-height: 44px;
+}
+
+.rail-tab .node {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--line);
+    transition: background var(--fast), box-shadow var(--fast);
+}
+
+.rail-tab.active { color: var(--ink-0); }
+.rail-tab.active .node { background: var(--cyan); box-shadow: 0 0 0 4px rgba(0, 217, 255, 0.15); }
+
+.rail-tab::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: -1px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--cyan), var(--purple));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--base);
+}
+.rail-tab.active::after { transform: scaleX(1); }
+
+.panel { display: none; }
+.panel.active { display: block; animation: rise 0.36s var(--ease); }
+
+@keyframes rise {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================================
+   PROFILE PANEL
+   ============================================================================ */
+
+.identity-card {
+    background: var(--bg-1);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-l);
+    padding: var(--sp-5);
+    margin-bottom: var(--sp-4);
+    box-shadow: var(--shadow-sm);
+}
+
+.identity-row { display: flex; align-items: center; gap: var(--sp-4); flex-wrap: wrap; }
+
+.avatar-ring {
+    position: relative;
+    width: 96px;
+    height: 96px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    padding: 3px;
+    background: conic-gradient(from 0deg, var(--cyan), var(--purple), var(--pink), var(--cyan));
+    animation: spin 10s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) { .avatar-ring { animation: none; } }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.avatar-ring-inner {
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    background: var(--bg-1);
+    padding: 4px;
+}
+
+.avatar {
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    display: grid;
+    place-items: center;
+    color: white;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 2rem;
+    background-size: cover;
+    background-position: center;
+    animation: counter-spin 10s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) { .avatar { animation: none; } }
+@keyframes counter-spin { to { transform: rotate(-360deg); } }
+
+.avatar-upload {
+    position: absolute;
+    bottom: -2px; right: -2px;
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: var(--bg-1);
+    border: 1px solid var(--line);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--fast), border-color var(--fast);
+}
+.avatar-upload:hover { transform: scale(1.08); border-color: var(--cyan); }
+#avatarInput { display: none; }
+
+.identity-text { flex: 1; min-width: 200px; }
+.identity-name { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; }
+.identity-handle { color: var(--ink-2); font-family: var(--font-mono); font-size: 0.85rem; margin-top: 2px; }
+
+.identity-meta { display: flex; align-items: center; gap: var(--sp-3); margin-top: var(--sp-3); flex-wrap: wrap; }
+
+.plan-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: var(--radius-full);
+    background: linear-gradient(135deg, rgba(0, 217, 255, 0.14), rgba(176, 36, 255, 0.14));
+    border: 1px solid rgba(0, 217, 255, 0.3);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--cyan);
+}
+.plan-chip .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); }
+
+.usage-figure { font-family: var(--font-mono); font-size: 0.8rem; color: var(--ink-2); }
+.usage-figure strong { color: var(--ink-0); font-weight: 600; }
+
+.card {
+    background: var(--bg-1);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-l);
+    padding: var(--sp-5);
+    margin-bottom: var(--sp-4);
+    box-shadow: var(--shadow-sm);
+}
+
+.card-title { display: flex; align-items: center; gap: var(--sp-2); font-size: 1.05rem; margin-bottom: 4px; }
+.card-title .node { width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.15); }
+.card-sub { color: var(--ink-2); font-size: 0.85rem; margin-bottom: var(--sp-4); }
+
+.field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-3); }
+.field { margin-bottom: var(--sp-3); }
+.field:last-child { margin-bottom: 0; }
+
+.field label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--ink-1); margin-bottom: 6px; }
+.field .hint { display: block; font-size: 0.78rem; color: var(--ink-2); margin-top: 6px; font-weight: 400; }
+
+input[type="text"], input[type="email"], input[type="password"], input[type="url"], textarea, select {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 14px;
+    border-radius: var(--radius-s);
+    border: 1px solid var(--line);
+    background: var(--bg-0);
+    color: var(--ink-0);
+    font-size: 0.92rem;
+    transition: border-color var(--fast), box-shadow var(--fast);
+}
+
+textarea { min-height: 92px; resize: vertical; padding-top: 12px; }
+
+input:focus-visible, textarea:focus-visible, select:focus-visible {
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 4px rgba(0, 217, 255, 0.14);
+}
+
+input:disabled { opacity: 0.6; cursor: not-allowed; }
+
+select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238b90ab' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 38px;
+    cursor: pointer;
+}
+
+@media (max-width: 480px) {
+    input, textarea, select { font-size: 16px; }
+    .field-grid { grid-template-columns: 1fr; }
+}
+
+hr.divider { border: none; border-top: 1px solid var(--line); margin: var(--sp-4) 0; }
+
+/* ============================================================================
+   SETTINGS PANEL — grouped cards on a connecting rail
+   ============================================================================ */
+
+.settings-rail { position: relative; padding-left: var(--sp-4); }
+
+.settings-rail::before {
+    content: '';
+    position: absolute;
+    left: 3px; top: 8px; bottom: 8px;
+    width: 1px;
+    background: linear-gradient(180deg, var(--cyan), var(--purple) 50%, transparent);
+    opacity: 0.35;
+}
+
+.setting-group {
+    position: relative;
+    background: var(--bg-1);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-l);
+    padding: var(--sp-4);
+    margin-bottom: var(--sp-3);
+}
+
+.setting-group::before {
+    content: '';
+    position: absolute;
+    left: calc(-1 * var(--sp-4) + 1px);
+    top: var(--sp-4);
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 0 3px var(--bg-0), 0 0 0 4px rgba(0, 217, 255, 0.25);
+}
+
+.setting-group h3 { font-size: 1rem; margin-bottom: 2px; }
+.setting-group > .group-sub { color: var(--ink-2); font-size: 0.82rem; margin-bottom: var(--sp-3); }
+
+.setting-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-3);
+    padding: var(--sp-2) 0;
+    border-top: 1px solid var(--line);
+}
+.setting-row:first-of-type { border-top: none; padding-top: 0; }
+
+.setting-copy h4 { font-family: var(--font-body); font-size: 0.9rem; font-weight: 600; color: var(--ink-0); }
+.setting-copy p { font-size: 0.8rem; color: var(--ink-2); margin-top: 2px; }
+
+.setting-control { flex-shrink: 0; display: flex; align-items: center; gap: var(--sp-2); }
+.setting-control select { min-width: 168px; width: auto; }
+
+.switch {
+    position: relative;
+    width: 46px; height: 27px; min-height: 27px;
+    border-radius: var(--radius-full);
+    background: var(--ring-track);
+    border: 1px solid var(--line);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background var(--fast), border-color var(--fast);
+}
+.switch::after {
+    content: '';
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 21px; height: 21px;
+    border-radius: 50%;
+    background: white;
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--fast);
+}
+.switch.on { background: linear-gradient(135deg, var(--cyan), var(--blue)); border-color: transparent; }
+.switch.on::after { transform: translateX(19px); }
+
+.segmented {
+    display: inline-flex;
+    padding: 3px;
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-full);
+}
+.segmented button {
+    border: none;
+    background: transparent;
+    color: var(--ink-2);
+    padding: 7px 14px;
+    min-height: 34px;
+    border-radius: var(--radius-full);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background var(--fast), color var(--fast);
+}
+.segmented button.active { background: var(--bg-1); color: var(--cyan); box-shadow: var(--shadow-sm); }
+
+.slider-row { padding: var(--sp-2) 0; }
+.slider-row .setting-copy { margin-bottom: var(--sp-3); }
+.slider-track { display: flex; align-items: center; gap: var(--sp-3); }
+
+input[type="range"] {
+    flex: 1;
+    appearance: none;
+    height: 4px;
+    border-radius: var(--radius-full);
+    background: linear-gradient(90deg, var(--cyan), var(--purple));
+    outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--bg-1);
+    border: 3px solid var(--cyan);
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+}
+input[type="range"]::-moz-range-thumb {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--bg-1);
+    border: 3px solid var(--cyan);
+    cursor: pointer;
+}
+
+.slider-value { font-family: var(--font-mono); font-size: 0.8rem; color: var(--ink-1); min-width: 74px; text-align: right; }
+
+.setting-group.danger {
+    border-color: rgba(255, 84, 112, 0.35);
+    background: linear-gradient(180deg, rgba(255, 84, 112, 0.05), transparent 40%);
+}
+.setting-group.danger::before { background: var(--error); }
+.setting-group.danger h3 { color: var(--error); }
+
+.btn-danger-outline {
+    min-height: 40px;
+    padding: 0 var(--sp-3);
+    border-radius: var(--radius-s);
+    border: 1px solid var(--error);
+    background: rgba(255, 84, 112, 0.08);
+    color: var(--error);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background var(--fast);
+}
+.btn-danger-outline:hover { background: rgba(255, 84, 112, 0.16); }
+
+.btn-outline-quiet {
+    min-height: 40px;
+    padding: 0 var(--sp-3);
+    border-radius: var(--radius-s);
+    border: 1px solid var(--line);
+    background: var(--bg-0);
+    color: var(--ink-1);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color var(--fast), color var(--fast);
+}
+.btn-outline-quiet:hover { border-color: var(--cyan); color: var(--cyan); }
+
+@media (max-width: 560px) {
+    .setting-row { flex-direction: column; align-items: flex-start; gap: var(--sp-2); }
+    .setting-control { width: 100%; }
+    .setting-control select { width: 100%; min-width: 0; }
+}
+
+/* ============================================================================
+   ACTION BAR
+   ============================================================================ */
+
+.action-bar {
+    position: sticky;
+    bottom: 0;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--sp-3);
+    padding: var(--sp-3) var(--sp-5);
+    background: var(--glass);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-top: 1px solid var(--line);
+}
+
+.unsaved-flag {
+    margin-right: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: var(--warning);
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity var(--fast), transform var(--fast);
+}
+.unsaved-flag.show { opacity: 1; transform: translateY(0); }
+.unsaved-flag .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--warning); }
+
+.btn {
+    min-height: 44px;
+    padding: 0 var(--sp-4);
+    border-radius: var(--radius-s);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform var(--fast), box-shadow var(--fast), background var(--fast), border-color var(--fast), color var(--fast);
+    border: 1px solid transparent;
+}
+.btn:active { transform: scale(0.98); }
+
+.btn-ghost { background: transparent; border-color: var(--line); color: var(--ink-1); }
+.btn-ghost:hover { border-color: var(--ink-2); color: var(--ink-0); }
+
+.btn-solid {
+    background: linear-gradient(135deg, var(--cyan), var(--blue));
+    color: #05050a;
+    box-shadow: var(--shadow-glow);
+}
+.btn-solid:hover { filter: brightness(1.06); }
+.btn-solid:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; filter: none; }
+
+@media (max-width: 560px) {
+    .action-bar { padding: var(--sp-3); flex-wrap: wrap; }
+    .unsaved-flag { width: 100%; margin-right: 0; margin-bottom: 4px; }
+    .btn { flex: 1; }
+}
+
+/* ============================================================================
+   TOAST
+   ============================================================================ */
+
+.toast {
+    position: fixed;
+    left: 50%;
+    bottom: 90px;
+    transform: translate(-50%, 12px);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px;
+    border-radius: var(--radius-full);
+    background: var(--ink-0);
+    color: var(--bg-1);
+    font-size: 0.85rem;
+    font-weight: 600;
+    box-shadow: var(--shadow-md);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--base), transform var(--base);
+    z-index: 50;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+.toast .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--success); }
+
+@media (max-width: 768px) {
+    .main { padding: var(--sp-4) var(--sp-3) var(--sp-6); }
+    .topbar { padding: var(--sp-2) var(--sp-3); }
+}
+
+        .logo-img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            display: block;
+        }
+        </style>
+</head>
+<body>
+
+<div class="shell">
+
+    <header class="topbar">
+        <div class="brand">
+            <img src="IMAGE.png" alt="Chaitify AI" class="logo-img">
+            <span>Chatify <span class="crumb">/ Account</span></span>
+        </div>
+        <div class="topbar-actions">
+            <div class="theme-switch" role="group" aria-label="Theme">
+                <button type="button" data-theme="light" title="Light" aria-label="Light theme">☀</button>
+                <button type="button" data-theme="dark" title="Dark" aria-label="Dark theme">☾</button>
+                <button type="button" data-theme="system" title="System" aria-label="Match system theme">◐</button>
+            </div>
+            <button class="btn-back" id="backBtn">← Back</button>
+        </div>
+    </header>
+
+    <main class="main">
+
+        <div class="page-lede">
+            <h1>Account</h1>
+            <p>Manage your identity and how Chatify behaves for you.</p>
+        </div>
+
+        <nav class="rail-nav" role="tablist" aria-label="Account sections">
+            <button class="rail-tab active" data-panel="profile" role="tab" aria-selected="true">
+                <span class="node"></span> Profile
+            </button>
+            <button class="rail-tab" data-panel="settings" role="tab" aria-selected="false">
+                <span class="node"></span> Settings
+            </button>
+        </nav>
+
+        <!-- ===== PROFILE PANEL ===== -->
+        <section class="panel active" id="panel-profile" role="tabpanel">
+
+            <div class="identity-card">
+                <div class="identity-row">
+                    <div class="avatar-ring">
+                        <div class="avatar-ring-inner">
+                            <div class="avatar" id="avatarDisplay">V</div>
+                        </div>
+                        <button class="avatar-upload" id="avatarBtn" title="Change avatar" aria-label="Change avatar">📷</button>
+                        <input type="file" id="avatarInput" accept="image/*">
+                    </div>
+                    <div class="identity-text">
+                        <div class="identity-name" id="displayName">Veer Malhotra</div>
+                        <div class="identity-handle">@veerm</div>
+                        <div class="identity-meta">
+                            <span class="plan-chip"><span class="dot"></span> Free plan</span>
+                            <span class="usage-figure"><strong>42</strong> / 100 chats this month</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><span class="node"></span> Edit profile</div>
+                <p class="card-sub">This information may be visible to your team.</p>
+
+                <div class="field-grid">
+                    <div class="field">
+                        <label for="firstName">First name</label>
+                        <input type="text" id="firstName" value="Veer">
+                    </div>
+                    <div class="field">
+                        <label for="lastName">Last name</label>
+                        <input type="text" id="lastName" value="Malhotra">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" value="veer@chatify.ai" disabled>
+                    <span class="hint">Your email is tied to sign-in and can't be changed here. <a href="#">Contact support</a>.</span>
+                </div>
+
+                <div class="field">
+                    <label for="bio">Bio</label>
+                    <textarea id="bio" maxlength="240" placeholder="Tell people what you're working on">AI researcher exploring retrieval-augmented workflows.</textarea>
+                </div>
+
+                <div class="field-grid">
+                    <div class="field">
+                        <label for="location">Location</label>
+                        <input type="text" id="location" value="Delhi, India">
+                    </div>
+                    <div class="field">
+                        <label for="website">Website</label>
+                        <input type="url" id="website" placeholder="https://">
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="card-title" style="margin-bottom: var(--sp-3);"><span class="node"></span> Password</div>
+
+                <div class="field-grid">
+                    <div class="field">
+                        <label for="currentPw">Current password</label>
+                        <input type="password" id="currentPw" placeholder="••••••••">
+                    </div>
+                    <div class="field">
+                        <label for="newPw">New password</label>
+                        <input type="password" id="newPw" placeholder="••••••••">
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="confirmPw">Confirm new password</label>
+                    <input type="password" id="confirmPw" placeholder="••••••••">
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ===== SETTINGS PANEL ===== -->
+        <section class="panel" id="panel-settings" role="tabpanel">
+
+            <div class="settings-rail">
+
+                <div class="setting-group">
+                    <h3>Appearance</h3>
+                    <p class="group-sub">How Chatify looks on this device.</p>
+
+                    <div class="setting-row">
+                        <div class="setting-copy">
+                            <h4>Theme</h4>
+                            <p>Applies instantly, syncs with the switch above.</p>
+                        </div>
+                        <div class="setting-control">
+                            <div class="segmented" data-group="theme-inline">
+                                <button type="button" data-theme="light">Light</button>
+                                <button type="button" data-theme="dark">Dark</button>
+                                <button type="button" data-theme="system">System</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-copy">
+                            <h4>Interface density</h4>
+                            <p>Compact tightens spacing for smaller screens.</p>
+                        </div>
+                        <div class="setting-control">
+                            <div class="segmented" data-group="density">
+                                <button type="button" data-value="comfortable" class="active">Comfortable</button>
+                                <button type="button" data-value="compact">Compact</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-copy">
+                            <h4>Text size</h4>
+                            <p>Adjust reading size across the app.</p>
+                        </div>
+                        <div class="setting-control">
+                            <select id="fontSize">
+                                <option value="small">Small</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="large">Large</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <h3>Language &amp; region</h3>
+                    <p class="group-sub">Used for interface text and timestamps.</p>
+
+                    <div class="setting-row">
+                        <div class="setting-copy">
+                            <h4>Language</h4>
+                            <p>Interface display language.</p>
+                        </div>
+                        <div class="setting-control">
+                            <select id="language">
+                                <option value="en">English</option>
+                                <option value="es">Español</option>
+                                <option value="fr">Français</option>
+                                <option value="de">Deutsch</option>
+                                <option value="hi">हिन्दी</option>
+                                <option value="ja">日本語</option>
+                                <option value="zh">中文</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-copy">
+                            <h4>Timezone</h4>
+                            <p>Used for scheduling and activity logs.</p>
+                        </div>
+                        <div class="setting-control">
+                            <select id="timezone">
+                                <option value="ist" selected>India Standard Time (IST)</option>
+                                <option value="utc">UTC</option>
+                                <option value="est">Eastern Time (EST)</option>
+                                <option value="pst">Pacific Time (PST)</option>
+                                <option value="cet">Central European Time (CET)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <h3>AI &amp; chat</h3>
+                    <p class="group-sub">How Chatify responds to you by default.</p>
+
+                    <div class="setting-row">
+                        <div class="setting-copy">
+                            <h4>Default model</h4>
+                            <p>Used to start new conversations.</p>
+                        </div>
+                        <div class="setting-control">
+                            <select id="defaultModel">
+                                <option value="chatify-pro" selected>Chatify Pro</option>
+                                <option value="chatify-fast">Chatify Fast</option>
+                                <option value="chatify-research">Chatify Research</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-copy">
+                            <h4>Response length</h4>
+                            <p>Bias new replies toward shorter or longer answers.</p>
+                        </div>
+                        <div class="setting-control">
+                            <div class="segmented" data-group="length">
+                                <button type="button" data-value="concise">Concise</button>
+                                <button type="button" data-value="balanced" class="active">Balanced</button>
+                                <button type="button" data-value="detailed">Detailed</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-row slider-row" style="flex-direction: column; align-items: stretch;">
+                        <div class="setting-copy">
+                            <h4>Response creativity</h4>
+                            <p>Lower keeps answers focused and predictable; higher allows more variation.</p>
+                        </div>
+                        <div class="slider-track">
+                            <input type="range" id="creativity" min="0" max="100" value="40" aria-label="Response creativity">
+                            <span class="slider-value" id="creativityValue">Focused · 40</span>
+                        </div>
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-copy">
+                            <h4>Stream responses</h4>
+                            <p>Show answers as they're generated, word by word.</p>
+                        </div>
+                        <div class="setting-control">
+                            <div class="switch on" data-setting="stream" role="switch" aria-checked="true" tabindex="0"></div>
+                        </div>
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-copy">
+                            <h4>Code syntax highlighting</h4>
+                            <p>Color code blocks in chat by language.</p>
+                        </div>
+                        <div class="setting-control">
+                            <div class="switch on" data-setting="syntax" role="switch" aria-checked="true" tabindex="0"></div>
+                        </div>
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-copy">
+                            <h4>Save chat history</h4>
+                            <p>Keep past conversations available in your library.</p>
+                        </div>
+                        <div class="setting-control">
+                            <div class="switch on" data-setting="history" role="switch" aria-checked="true" tabindex="0"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <h3>Notifications</h3>
+                    <p class="group-sub">Choose what Chatify emails you about.</p>
+
+                    <div class="setting-row">
+                        <div class="setting-copy">
+                            <h4>Research complete</h4>
+                            <p>Notify when a deep research task finishes.</p>
+                        </div>
+                        <div class="setting-control">
+                            <div class="switch on" data-setting="notif-research" role="switch" aria-checked="true" tabindex="0"></div>
+                        </div>
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-copy">
+                            <h4>Product updates</h4>
+                            <p>Occasional notes on major changes.</p>
+                        </div>
+                        <div class="setting-control">
+                            <div class="switch on" data-setting="notif-updates" role="switch" aria-checked="true" tabindex="0"></div>
+                        </div>
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-copy">
+                            <h4>New features</h4>
+                            <p>Early word on things we've just shipped.</p>
+                        </div>
+                        <div class="setting-control">
+                            <div class="switch" data-setting="notif-features" role="switch" aria-checked="false" tabindex="0"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <h3>Privacy &amp; data</h3>
+                    <p class="group-sub">Control what Chatify learns from and shares.</p>
+
+                    <div class="setting-row">
+                        <div class="setting-copy">
+                            <h4>Improve the model with my chats</h4>
+                            <p>Anonymized conversations may be used for training.</p>
+                        </div>
+                        <div class="setting-control">
+                            <div class="switch on" data-setting="training" role="switch" aria-checked="true" tabindex="0"></div>
+                        </div>
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-copy">
+                            <h4>Usage analytics</h4>
+                            <p>Help us understand which features matter.</p>
+                        </div>
+                        <div class="setting-control">
+                            <div class="switch on" data-setting="analytics" role="switch" aria-checked="true" tabindex="0"></div>
+                        </div>
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-copy">
+                            <h4>Third-party integrations</h4>
+                            <p>Allow connected apps to access your account.</p>
+                        </div>
+                        <div class="setting-control">
+                            <div class="switch" data-setting="integrations" role="switch" aria-checked="false" tabindex="0"></div>
+                        </div>
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-copy">
+                            <h4>Cookies</h4>
+                            <p>Essential cookies are always on.</p>
+                        </div>
+                        <div class="setting-control">
+                            <select id="cookies">
+                                <option value="essential" selected>Essential only</option>
+                                <option value="all">Essential + analytics</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-copy">
+                            <h4>Chat retention</h4>
+                            <p>How long conversation history is kept.</p>
+                        </div>
+                        <div class="setting-control">
+                            <select id="retention">
+                                <option value="30">30 days</option>
+                                <option value="90" selected>90 days</option>
+                                <option value="forever">Until deleted</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setting-group danger">
+                    <h3>Danger zone</h3>
+                    <p class="group-sub">These actions are permanent.</p>
+
+                    <div class="setting-row">
+                        <div class="setting-copy">
+                            <h4>Export your data</h4>
+                            <p>Download a copy of your profile, chats, and research.</p>
+                        </div>
+                        <div class="setting-control">
+                            <button class="btn-outline-quiet" id="exportBtn">Export</button>
+                        </div>
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-copy">
+                            <h4>Delete account</h4>
+                            <p>Permanently remove your account and all associated data.</p>
+                        </div>
+                        <div class="setting-control">
+                            <button class="btn-danger-outline" id="deleteBtn">Delete account</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <div class="action-bar">
+        <div class="unsaved-flag" id="unsavedFlag"><span class="dot"></span> Unsaved changes</div>
+        <button class="btn btn-ghost" id="cancelBtn">Cancel</button>
+        <button class="btn btn-solid" id="saveBtn" disabled>Save changes</button>
+    </div>
+
+    <div class="toast" id="toast"><span class="dot"></span> <span id="toastText">Changes saved</span></div>
+
+</div>
+
+<script>
+/* ============================================================================
+   THEME — tri-state (light / dark / system), persisted
+   ============================================================================ */
+
+const themeButtons = document.querySelectorAll('[data-theme]');
+const media = window.matchMedia('(prefers-color-scheme: dark)');
+
+function applyTheme(mode) {
+    const resolved = mode === 'system' ? (media.matches ? 'dark' : 'light') : mode;
+    document.documentElement.classList.toggle('dark', resolved === 'dark');
+    themeButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.theme === mode));
+    localStorage.setItem('chatify_theme', mode);
+}
+
+function initTheme() {
+    const saved = localStorage.getItem('chatify_theme') || 'system';
+    applyTheme(saved);
+}
+
+themeButtons.forEach(btn => {
+    btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+});
+
+media.addEventListener('change', () => {
+    if ((localStorage.getItem('chatify_theme') || 'system') === 'system') applyTheme('system');
+});
+
+initTheme();
+
+/* ============================================================================
+   TABS
+   ============================================================================ */
+
+const tabs = document.querySelectorAll('.rail-tab');
+const panels = document.querySelectorAll('.panel');
+
+tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
+        panels.forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
+        document.getElementById('panel-' + tab.dataset.panel).classList.add('active');
+    });
+});
+
+/* ============================================================================
+   CHANGE TRACKING
+   ============================================================================ */
+
+const saveBtn = document.getElementById('saveBtn');
+const cancelBtn = document.getElementById('cancelBtn');
+const unsavedFlag = document.getElementById('unsavedFlag');
+const toast = document.getElementById('toast');
+const toastText = document.getElementById('toastText');
+
+let dirty = false;
+
+function markDirty() {
+    dirty = true;
+    saveBtn.disabled = false;
+    unsavedFlag.classList.add('show');
+}
+
+function markClean() {
+    dirty = false;
+    saveBtn.disabled = true;
+    unsavedFlag.classList.remove('show');
+}
+
+document.querySelectorAll('input, textarea, select').forEach(el => {
+    const evt = (el.tagName === 'SELECT' || el.type === 'range') ? 'change' : 'input';
+    el.addEventListener(evt, markDirty);
+});
+
+/* ============================================================================
+   AVATAR UPLOAD
+   ============================================================================ */
+
+const avatarBtn = document.getElementById('avatarBtn');
+const avatarInput = document.getElementById('avatarInput');
+const avatarDisplay = document.getElementById('avatarDisplay');
+
+avatarBtn.addEventListener('click', () => avatarInput.click());
+
+avatarInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+        avatarDisplay.style.backgroundImage = `url(${ev.target.result})`;
+        avatarDisplay.textContent = '';
+        markDirty();
+    };
+    reader.readAsDataURL(file);
+});
+
+/* ============================================================================
+   LIVE DISPLAY NAME
+   ============================================================================ */
+
+const firstName = document.getElementById('firstName');
+const lastName = document.getElementById('lastName');
+const displayName = document.getElementById('displayName');
+
+function syncName() {
+    const f = firstName.value.trim() || 'First';
+    const l = lastName.value.trim() || 'Last';
+    displayName.textContent = `${f} ${l}`;
+}
+firstName.addEventListener('input', syncName);
+lastName.addEventListener('input', syncName);
+
+/* ============================================================================
+   TOGGLE SWITCHES
+   ============================================================================ */
+
+document.querySelectorAll('.switch').forEach(sw => {
+    function toggle() {
+        const on = sw.classList.toggle('on');
+        sw.setAttribute('aria-checked', on ? 'true' : 'false');
+        markDirty();
+    }
+    sw.addEventListener('click', toggle);
+    sw.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+    });
+});
+
+/* ============================================================================
+   SEGMENTED CONTROLS
+   ============================================================================ */
+
+document.querySelectorAll('.segmented').forEach(group => {
+    if (group.dataset.group === 'theme-inline') return;
+    group.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('click', () => {
+            group.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            markDirty();
+        });
+    });
+});
+
+document.querySelectorAll('[data-group="theme-inline"] button').forEach(btn => {
+    btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+});
+themeButtons.forEach(b => {
+    const observer = new MutationObserver(() => {
+        document.querySelectorAll('[data-group="theme-inline"] button').forEach(inlineBtn => {
+            inlineBtn.classList.toggle('active', inlineBtn.dataset.theme === b.dataset.theme && b.classList.contains('active'));
+        });
+    });
+    observer.observe(b, { attributes: true, attributeFilter: ['class'] });
+});
+
+/* ============================================================================
+   CREATIVITY SLIDER
+   ============================================================================ */
+
+const creativity = document.getElementById('creativity');
+const creativityValue = document.getElementById('creativityValue');
+
+function labelFor(v) {
+    if (v < 25) return 'Precise';
+    if (v < 50) return 'Focused';
+    if (v < 75) return 'Balanced';
+    return 'Exploratory';
+}
+
+creativity.addEventListener('input', () => {
+    creativityValue.textContent = `${labelFor(+creativity.value)} · ${creativity.value}`;
+});
+
+/* ============================================================================
+   TEXTAREA AUTO-EXPAND
+   ============================================================================ */
+
+const bio = document.getElementById('bio');
+function autoExpand() {
+    bio.style.height = 'auto';
+    bio.style.height = bio.scrollHeight + 'px';
+}
+bio.addEventListener('input', autoExpand);
+autoExpand();
+
+/* ============================================================================
+   SAVE / CANCEL
+   ============================================================================ */
+
+function showToast(msg) {
+    toastText.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2200);
+}
+
+saveBtn.addEventListener('click', () => {
+    if (!dirty) return;
+    // Ready for backend integration:
+    // fetch('/api/user/profile', { method: 'PATCH', body: JSON.stringify({...}) })
+    // fetch('/api/user/preferences', { method: 'PATCH', body: JSON.stringify({...}) })
+    console.log('Saving profile + preferences — ready for backend integration');
+    markClean();
+    showToast('Changes saved');
+});
+
+cancelBtn.addEventListener('click', () => {
+    if (dirty && !confirm('Discard unsaved changes?')) return;
+    location.reload();
+});
+
+/* ============================================================================
+   DANGER ZONE
+   ============================================================================ */
+
+document.getElementById('deleteBtn').addEventListener('click', () => {
+    if (confirm('This will permanently delete your account and all data. Continue?')) {
+        console.log('Delete account — ready for backend integration');
+    }
+});
+
+document.getElementById('exportBtn').addEventListener('click', () => {
+    console.log('Export data — ready for backend integration');
+    showToast('Preparing your export…');
+});
+
+document.getElementById('backBtn').addEventListener('click', () => {
+    console.log('Back — ready for router integration');
+    history.back();
+});
+
+console.log('Chatify AI · account.html ready for backend integration');
+</script>
+
+</body>
+</html>
