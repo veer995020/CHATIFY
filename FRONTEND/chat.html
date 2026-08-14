@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -95,14 +96,458 @@ body {
 }
 
 /* ============================================================================
-   CHAT CONTAINER
+   CHAT CONTAINER & LAYOUT
    ============================================================================ */
 
 .chat-shell {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     height: 100%;
     background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+}
+
+/* ============================================================================
+   SIDEBAR
+   ============================================================================ */
+
+.sidebar {
+    width: 260px;
+    background: var(--glass-light);
+    backdrop-filter: blur(10px);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: var(--radius-full);
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: var(--neon-cyan);
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-md);
+    gap: var(--spacing-sm);
+}
+
+.sidebar-close {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--text-primary);
+    width: 32px;
+    height: 32px;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+}
+
+.sidebar-close:hover {
+    background: var(--glass-dark);
+    color: var(--neon-cyan);
+}
+
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    flex: 1;
+    min-width: 0;
+}
+
+.sidebar-logo-img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.sidebar-logo-text {
+    font-weight: 700;
+    font-size: var(--font-size-sm);
+    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    white-space: nowrap;
+}
+
+/* New Chat Button */
+.new-chat-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-xs);
+    margin: 0 var(--spacing-md) var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
+    border: 1px solid var(--neon-cyan);
+    border-radius: var(--radius-lg);
+    color: #000;
+    font-weight: 700;
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    box-shadow: 0 0 16px rgba(0, 217, 255, 0.2);
+}
+
+.new-chat-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 24px rgba(0, 217, 255, 0.35);
+}
+
+/* Navigation */
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 0 var(--spacing-md) var(--spacing-md);
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    text-decoration: none;
+    cursor: pointer;
+    font-size: var(--font-size-sm);
+    transition: all var(--transition-fast);
+}
+
+.nav-item:hover {
+    background: var(--glass-dark);
+    border-color: var(--border);
+}
+
+.nav-item.active {
+    background: var(--glass-dark);
+    border-color: var(--neon-cyan);
+    color: var(--neon-cyan);
+}
+
+.nav-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.nav-label {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Search */
+.sidebar-search {
+    position: relative;
+    margin: var(--spacing-md) var(--spacing-md);
+}
+
+.search-input {
+    width: 100%;
+    padding: var(--spacing-xs) var(--spacing-sm) var(--spacing-xs) 32px;
+    background: var(--glass-dark);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-xs);
+    color: var(--text-primary);
+    outline: none;
+    transition: all var(--transition-fast);
+}
+
+.search-input::placeholder {
+    color: var(--text-tertiary);
+}
+
+.search-input:focus {
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.1);
+}
+
+.search-icon {
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+/* Sidebar Sections */
+.sidebar-section {
+    padding: var(--spacing-md) var(--spacing-md);
+    border-top: 1px solid var(--border);
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-sm);
+}
+
+.section-title {
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-tertiary);
+    margin: 0;
+}
+
+.section-collapse {
+    background: none;
+    border: none;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    font-size: 18px;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+}
+
+.section-collapse:hover {
+    color: var(--text-primary);
+}
+
+.section-collapse.collapsed {
+    transform: rotate(-90deg);
+}
+
+.section-content {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.section-content::-webkit-scrollbar {
+    width: 4px;
+}
+
+.section-content::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: var(--radius-full);
+}
+
+/* History */
+.history-group {
+    margin-bottom: var(--spacing-sm);
+}
+
+.history-label {
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    color: var(--text-tertiary);
+    margin-bottom: 6px;
+}
+
+.history-items {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.history-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: 8px var(--spacing-sm);
+    background: var(--glass-dark);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    position: relative;
+}
+
+.history-item:hover {
+    background: var(--glass-light);
+    border-color: var(--neon-cyan);
+}
+
+.history-text {
+    font-size: var(--font-size-xs);
+    color: var(--text-primary);
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.history-actions {
+    display: flex;
+    gap: 2px;
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.history-item:hover .history-actions {
+    opacity: 1;
+}
+
+.history-btn {
+    background: none;
+    border: none;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    font-size: 12px;
+    padding: 4px;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.history-btn:hover {
+    color: var(--neon-cyan);
+}
+
+.pin-btn {
+    opacity: 0.5;
+}
+
+.pin-btn.pinned {
+    opacity: 1;
+    color: var(--neon-cyan);
+}
+
+/* Context Menu */
+.context-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    min-width: 140px;
+    z-index: 100;
+    display: none;
+    flex-direction: column;
+    margin-top: 4px;
+}
+
+.context-menu.open {
+    display: flex;
+}
+
+.context-item {
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    text-align: left;
+    font-size: var(--font-size-xs);
+    transition: all var(--transition-fast);
+}
+
+.context-item:first-child {
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.context-item:last-child {
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
+
+.context-item:hover {
+    background: var(--glass-light);
+    color: var(--neon-cyan);
+}
+
+.context-item[data-action="delete"]:hover {
+    color: var(--error);
+}
+
+/* Sidebar Footer */
+.sidebar-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: var(--spacing-md);
+    border-top: 1px solid var(--border);
+    margin-top: auto;
+    flex-shrink: 0;
+}
+
+.sidebar-footer-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    cursor: pointer;
+    font-size: var(--font-size-sm);
+    transition: all var(--transition-fast);
+}
+
+.sidebar-footer-btn:hover {
+    background: var(--glass-dark);
+    border-color: var(--border);
+    color: var(--neon-cyan);
+}
+
+/* Sidebar Overlay (Mobile) */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    backdrop-filter: blur(4px);
+}
+
+.sidebar-overlay.open {
+    display: block;
 }
 
 /* ============================================================================
@@ -141,8 +586,6 @@ body {
     height: 32px;
     background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
     border-radius: var(--radius-sm);
-    /* ... */
-
 }
 
 .logo-text {
@@ -202,6 +645,27 @@ body {
     border-color: var(--neon-cyan);
     color: var(--neon-cyan);
     transform: translateY(-2px);
+}
+
+.mobile-menu-btn {
+    display: none;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    color: var(--text-primary);
+    font-size: 20px;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.mobile-menu-btn:hover {
+    border-color: var(--neon-cyan);
+    color: var(--neon-cyan);
 }
 
 /* ============================================================================
@@ -650,6 +1114,157 @@ body {
     cursor: not-allowed;
 }
 
+/* ============================================================================
+   MODEL/MODE SELECTOR
+   ============================================================================ */
+
+.model-mode-selector {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: 6px 12px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    color: var(--text-primary);
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+    flex-shrink: 0;
+    user-select: none;
+}
+
+.model-mode-selector:hover {
+    border-color: var(--neon-cyan);
+    background: var(--bg-tertiary);
+}
+
+.selector-text {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.selector-divider {
+    opacity: 0.3;
+}
+
+/* ============================================================================
+   SELECTOR DROPDOWN/MODAL
+   ============================================================================ */
+
+.selector-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+}
+
+.selector-modal.open {
+    display: flex;
+}
+
+.selector-dropdown {
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 380px;
+    width: 90vw;
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdown-section {
+    padding: var(--spacing-md);
+}
+
+.dropdown-section:not(:last-child) {
+    border-bottom: 1px solid var(--border);
+}
+
+.dropdown-title {
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-tertiary);
+    margin-bottom: var(--spacing-md);
+}
+
+.model-option, .mode-option {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
+    background: var(--glass-dark);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.model-option:last-child, .mode-option:last-child {
+    margin-bottom: 0;
+}
+
+.model-option:hover, .mode-option:hover {
+    background: var(--glass-light);
+    border-color: var(--neon-cyan);
+}
+
+.model-option.selected, .mode-option.selected {
+    background: linear-gradient(135deg, rgba(0, 217, 255, 0.1), rgba(0, 128, 255, 0.1));
+    border-color: var(--neon-cyan);
+}
+
+.option-icon {
+    font-size: 16px;
+}
+
+.option-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.option-label {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.option-description {
+    font-size: var(--font-size-xs);
+    color: var(--text-tertiary);
+    margin-top: 2px;
+}
+
+.option-checkmark {
+    font-size: 14px;
+    color: var(--neon-cyan);
+    font-weight: 700;
+}
+
 .input-helpers {
     display: flex;
     gap: var(--spacing-sm);
@@ -699,9 +1314,37 @@ body {
    ============================================================================ */
 
 @media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        z-index: 1001;
+        transform: translateX(-100%);
+        transition: transform var(--transition-base);
+        width: 240px;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .sidebar-close {
+        display: flex;
+    }
+
+    .mobile-menu-btn {
+        display: flex;
+    }
+
     .chat-header {
         padding: var(--spacing-md);
         flex-wrap: wrap;
+        gap: var(--spacing-sm);
+    }
+
+    .header-left {
+        gap: var(--spacing-sm);
     }
 
     .chat-title h1 {
@@ -735,21 +1378,31 @@ body {
         flex-direction: column;
         gap: var(--spacing-xs);
     }
+
+    .selector-dropdown {
+        max-width: 320px;
+    }
 }
 
 @media (max-width: 480px) {
     .chat-header {
         padding: var(--spacing-sm) var(--spacing-md);
+        gap: var(--spacing-xs);
     }
 
     .header-left {
-        gap: var(--spacing-sm);
+        gap: var(--spacing-xs);
+        flex: 1;
     }
 
     .logo-icon {
         width: 28px;
         height: 28px;
         font-size: 14px;
+    }
+
+    .chat-logo {
+        display: none;
     }
 
     .chat-title h1 {
@@ -761,7 +1414,13 @@ body {
     }
 
     .header-right {
-        gap: var(--spacing-sm);
+        gap: var(--spacing-xs);
+    }
+
+    .mobile-menu-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 18px;
     }
 
     .message-content {
@@ -791,25 +1450,225 @@ body {
         height: 40px;
         font-size: 15px;
     }
+
+    .model-mode-selector {
+        font-size: var(--font-size-xs);
+        padding: 5px 10px;
+    }
+
+    .selector-dropdown {
+        max-width: 95vw;
+    }
 }
 
-        .logo-img {
-            width: 32px;
-            height: 32px;
-            object-fit: contain;
-            display: block;
-        }
-        </style>
+.logo-img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    display: block;
+}
+</style>
 </head>
 <body>
 
 <div class="chat-shell">
 
+    <!-- ===== LEFT SIDEBAR ===== -->
+    <aside class="sidebar" id="sidebar">
+        <!-- Sidebar Top -->
+        <div class="sidebar-header">
+            <button class="sidebar-close" id="sidebarClose">✕</button>
+            <div class="sidebar-logo">
+                <img src="C:\Users\Renewfy\Links\CHATIFY\STATIC\IMAGES AND VIDEOS\IMAGE.png" alt="Chatify" class="sidebar-logo-img">
+                <span class="sidebar-logo-text"><span>Chatify</span></span>
+            </div>
+        </div>
+
+        <!-- New Chat Button -->
+        <button class="new-chat-btn" id="newChatBtn">
+            <span>✚</span> New Chat
+        </button>
+
+        <!-- Navigation -->
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Home</span>
+            </a>
+            <a href="#" class="nav-item active">
+                <span class="nav-icon">💬</span>
+                <span class="nav-label">Chat</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">🔬</span>
+                <span class="nav-label">Research</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">&lt;/&gt;</span>
+                <span class="nav-label">Coding</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">✎</span>
+                <span class="nav-label">Writing</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">✨</span>
+                <span class="nav-label">Brainstormer</span>
+            </a>
+        </nav>
+
+        <!-- Search -->
+        <div class="sidebar-search">
+            <input type="text" id="sidebarSearch" class="search-input" placeholder="Search chats...">
+            <span class="search-icon">🔍</span>
+        </div>
+
+        <!-- History Section -->
+        <div class="sidebar-section">
+            <div class="section-header">
+                <h3 class="section-title">History</h3>
+                <button class="section-collapse" data-section="history">−</button>
+            </div>
+            <div class="section-content" id="historyContent">
+                <!-- Today -->
+                <div class="history-group">
+                    <div class="history-label">Today</div>
+                    <div class="history-items">
+                        <div class="history-item" data-id="1">
+                            <span class="history-text">Building a REST API...</span>
+                            <div class="history-actions">
+                                <button class="history-btn pin-btn" title="Pin">📌</button>
+                                <button class="history-btn menu-btn" title="More">⋯</button>
+                            </div>
+                            <div class="context-menu">
+                                <button class="context-item" data-action="open">Open</button>
+                                <button class="context-item" data-action="rename">Rename</button>
+                                <button class="context-item" data-action="pin">Pin</button>
+                                <button class="context-item" data-action="delete">Delete</button>
+                            </div>
+                        </div>
+                        <div class="history-item" data-id="2">
+                            <span class="history-text">Python optimization tips</span>
+                            <div class="history-actions">
+                                <button class="history-btn pin-btn" title="Pin">📌</button>
+                                <button class="history-btn menu-btn" title="More">⋯</button>
+                            </div>
+                            <div class="context-menu">
+                                <button class="context-item" data-action="open">Open</button>
+                                <button class="context-item" data-action="rename">Rename</button>
+                                <button class="context-item" data-action="pin">Pin</button>
+                                <button class="context-item" data-action="delete">Delete</button>
+                            </div>
+                        </div>
+                        <div class="history-item" data-id="3">
+                            <span class="history-text">Frontend design patterns</span>
+                            <div class="history-actions">
+                                <button class="history-btn pin-btn" title="Pin">📌</button>
+                                <button class="history-btn menu-btn" title="More">⋯</button>
+                            </div>
+                            <div class="context-menu">
+                                <button class="context-item" data-action="open">Open</button>
+                                <button class="context-item" data-action="rename">Rename</button>
+                                <button class="context-item" data-action="pin">Pin</button>
+                                <button class="context-item" data-action="delete">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Yesterday -->
+                <div class="history-group">
+                    <div class="history-label">Yesterday</div>
+                    <div class="history-items">
+                        <div class="history-item" data-id="4">
+                            <span class="history-text">Database schema design</span>
+                            <div class="history-actions">
+                                <button class="history-btn pin-btn" title="Pin">📌</button>
+                                <button class="history-btn menu-btn" title="More">⋯</button>
+                            </div>
+                            <div class="context-menu">
+                                <button class="context-item" data-action="open">Open</button>
+                                <button class="context-item" data-action="rename">Rename</button>
+                                <button class="context-item" data-action="pin">Pin</button>
+                                <button class="context-item" data-action="delete">Delete</button>
+                            </div>
+                        </div>
+                        <div class="history-item" data-id="5">
+                            <span class="history-text">API error handling</span>
+                            <div class="history-actions">
+                                <button class="history-btn pin-btn" title="Pin">📌</button>
+                                <button class="history-btn menu-btn" title="More">⋯</button>
+                            </div>
+                            <div class="context-menu">
+                                <button class="context-item" data-action="open">Open</button>
+                                <button class="context-item" data-action="rename">Rename</button>
+                                <button class="context-item" data-action="pin">Pin</button>
+                                <button class="context-item" data-action="delete">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Older -->
+                <div class="history-group">
+                    <div class="history-label">Older</div>
+                    <div class="history-items">
+                        <div class="history-item" data-id="6">
+                            <span class="history-text">Machine learning basics</span>
+                            <div class="history-actions">
+                                <button class="history-btn pin-btn" title="Pin">📌</button>
+                                <button class="history-btn menu-btn" title="More">⋯</button>
+                            </div>
+                            <div class="context-menu">
+                                <button class="context-item" data-action="open">Open</button>
+                                <button class="context-item" data-action="rename">Rename</button>
+                                <button class="context-item" data-action="pin">Pin</button>
+                                <button class="context-item" data-action="delete">Delete</button>
+                            </div>
+                        </div>
+                        <div class="history-item" data-id="7">
+                            <span class="history-text">Cloud deployment guide</span>
+                            <div class="history-actions">
+                                <button class="history-btn pin-btn" title="Pin">📌</button>
+                                <button class="history-btn menu-btn" title="More">⋯</button>
+                            </div>
+                            <div class="context-menu">
+                                <button class="context-item" data-action="open">Open</button>
+                                <button class="context-item" data-action="rename">Rename</button>
+                                <button class="context-item" data-action="pin">Pin</button>
+                                <button class="context-item" data-action="delete">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar Footer -->
+        <div class="sidebar-footer">
+            <button class="sidebar-footer-btn" id="settingsBtn">
+                <span class="nav-icon">⚙️</span>
+                <span class="nav-label">Settings</span>
+            </button>
+            <button class="sidebar-footer-btn" id="profileBtn">
+                <span class="nav-icon">👤</span>
+                <span class="nav-label">Profile</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Sidebar Overlay (Mobile) -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
     <!-- ===== HEADER ===== -->
     <header class="chat-header">
+        <button class="mobile-menu-btn" id="mobileMenuBtn" title="Open menu">☰</button>
         <div class="header-left">
             <a href="#" class="chat-logo">
-                <img src="C:\Users\Renewfy\Links\CHATIFY\STATIC\IMAGES AND VIDEOS\IMAGE.png" alt="Chaitify AI" class="logo-img">
+                <img src="C:\Users\Renewfy\Links\CHATIFY\STATIC\IMAGES AND VIDEOS\IMAGE.png" alt="Chatify AI" class="logo-img">
                 <div class="logo-text"><span>Chatify</span> AI</div>
             </a>
             <div class="chat-title">
@@ -863,9 +1722,18 @@ body {
             </div>
 
             <div class="input-field-wrapper">
-                <textarea id="messageInput" placeholder="Type your message here... (Shift+Enter for new line)" rows="1"></textarea>
+                <textarea id="messageInput" placeholder="Message Chatify AI..." rows="1"></textarea>
                 <button class="send-btn" id="sendBtn" title="Send message (Enter to send)">⬆</button>
             </div>
+        </div>
+
+        <!-- Model/Mode Selector -->
+        <div style="display: flex; gap: var(--spacing-sm); align-items: center;">
+            <button class="model-mode-selector" id="modelModeBtn">
+                <span class="selector-text">
+                    <span id="selectorDisplay">✨ Brainstormer · General ▾</span>
+                </span>
+            </button>
         </div>
 
         <div class="input-helpers">
@@ -873,9 +1741,319 @@ body {
         </div>
     </div>
 
+    </div><!-- End main-content -->
+
+</div>
+
+<!-- Model/Mode Selector Modal -->
+<div class="selector-modal" id="selectorModal">
+    <div class="selector-dropdown">
+        <!-- Models Section -->
+        <div class="dropdown-section">
+            <div class="dropdown-title">AI Model</div>
+            <div class="model-option selected" data-model="brainstormer">
+                <span class="option-icon">✨</span>
+                <div class="option-content">
+                    <div class="option-label">Brainstormer</div>
+                    <div class="option-description">Ultra deep research model</div>
+                </div>
+                <span class="option-checkmark">✓</span>
+            </div>
+            <div class="model-option" data-model="mythical">
+                <span class="option-icon">⚡</span>
+                <div class="option-content">
+                    <div class="option-label">Mythical</div>
+                    <div class="option-description">Advanced reasoning model</div>
+                </div>
+                <span class="option-checkmark" style="display:none;">✓</span>
+            </div>
+            <div class="model-option" data-model="sonet">
+                <span class="option-icon">◎</span>
+                <div class="option-content">
+                    <div class="option-label">Sonet</div>
+                    <div class="option-description">Balanced everyday model</div>
+                </div>
+                <span class="option-checkmark" style="display:none;">✓</span>
+            </div>
+            <div class="model-option" data-model="rapid">
+                <span class="option-icon">🚀</span>
+                <div class="option-content">
+                    <div class="option-label">Rapid</div>
+                    <div class="option-description">Fast default model</div>
+                </div>
+                <span class="option-checkmark" style="display:none;">✓</span>
+            </div>
+        </div>
+
+        <!-- Modes Section -->
+        <div class="dropdown-section">
+            <div class="dropdown-title">AI Mode</div>
+            <div class="mode-option selected" data-mode="general">
+                <span class="option-icon">💬</span>
+                <div class="option-content">
+                    <div class="option-label">General</div>
+                </div>
+                <span class="option-checkmark">✓</span>
+            </div>
+            <div class="mode-option" data-mode="research">
+                <span class="option-icon">🔬</span>
+                <div class="option-content">
+                    <div class="option-label">Research</div>
+                </div>
+                <span class="option-checkmark" style="display:none;">✓</span>
+            </div>
+            <div class="mode-option" data-mode="coding">
+                <span class="option-icon">&lt;/&gt;</span>
+                <div class="option-content">
+                    <div class="option-label">Coding</div>
+                </div>
+                <span class="option-checkmark" style="display:none;">✓</span>
+            </div>
+            <div class="mode-option" data-mode="writing">
+                <span class="option-icon">✎</span>
+                <div class="option-content">
+                    <div class="option-label">Writing</div>
+                </div>
+                <span class="option-checkmark" style="display:none;">✓</span>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
+// ============================================================================
+// STATE MANAGEMENT
+// ============================================================================
+
+let currentModel = 'brainstormer';
+let currentMode = 'general';
+let messages = [];
+let attachments = [];
+let sidebarOpen = false;
+
+const modelIcons = {
+    brainstormer: '✨',
+    mythical: '⚡',
+    sonet: '◎',
+    rapid: '🚀'
+};
+
+const modelNames = {
+    brainstormer: 'Brainstormer',
+    mythical: 'Mythical',
+    sonet: 'Sonet',
+    rapid: 'Rapid'
+};
+
+const modeIcons = {
+    general: '💬',
+    research: '🔬',
+    coding: '</>',
+    writing: '✎'
+};
+
+const modeNames = {
+    general: 'General',
+    research: 'Research',
+    coding: 'Coding',
+    writing: 'Writing'
+};
+
+// ============================================================================
+// DOM ELEMENTS
+// ============================================================================
+
+// Chat elements
+const conversation = document.getElementById('conversation');
+const messageInput = document.getElementById('messageInput');
+const sendBtn = document.getElementById('sendBtn');
+const attachBtn = document.getElementById('attachBtn');
+const fileInput = document.getElementById('fileInput');
+const clearChatBtn = document.getElementById('clearChatBtn');
+const emptyState = document.getElementById('emptyState');
+const attachmentPreview = document.getElementById('attachmentPreview');
+const chatTitle = document.getElementById('chatTitle');
+const chatStatus = document.getElementById('chatStatus');
+
+// Selector elements
+const modelModeBtn = document.getElementById('modelModeBtn');
+const selectorModal = document.getElementById('selectorModal');
+const selectorDisplay = document.getElementById('selectorDisplay');
+
+// Sidebar elements
+const sidebar = document.getElementById('sidebar');
+const sidebarClose = document.getElementById('sidebarClose');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
+const newChatBtn = document.getElementById('newChatBtn');
+const settingsBtn = document.getElementById('settingsBtn');
+const profileBtn = document.getElementById('profileBtn');
+const sidebarSearch = document.getElementById('sidebarSearch');
+const historyContent = document.getElementById('historyContent');
+const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+
+// ============================================================================
+// SIDEBAR MANAGEMENT
+// ============================================================================
+
+function toggleSidebar() {
+    sidebarOpen = !sidebarOpen;
+    sidebar.classList.toggle('open');
+    sidebarOverlay.classList.toggle('open');
+}
+
+function closeSidebar() {
+    sidebarOpen = false;
+    sidebar.classList.remove('open');
+    sidebarOverlay.classList.remove('open');
+}
+
+sidebarClose.addEventListener('click', closeSidebar);
+sidebarOverlay.addEventListener('click', closeSidebar);
+mobileMenuBtn.addEventListener('click', toggleSidebar);
+
+// Close sidebar on window resize if screen gets larger
+window.addEventListener('resize', () => {
+    if (window.innerWidth > 768 && sidebarOpen) {
+        closeSidebar();
+    }
+});
+
+// New Chat Button
+newChatBtn.addEventListener('click', () => {
+    messages = [];
+    attachments = [];
+    conversation.innerHTML = '';
+    conversation.appendChild(emptyState);
+    emptyState.style.display = 'flex';
+    chatTitle.textContent = 'New Chat';
+    chatStatus.textContent = 'Ready to chat';
+    attachmentPreview.classList.remove('show');
+    attachmentPreview.innerHTML = '';
+    messageInput.value = '';
+    closeSidebar();
+});
+
+// Settings & Profile
+settingsBtn.addEventListener('click', () => {
+    alert('Settings coming soon!');
+    closeSidebar();
+});
+
+profileBtn.addEventListener('click', () => {
+    alert('Profile coming soon!');
+    closeSidebar();
+});
+
+// History Item Actions
+document.querySelectorAll('.history-item').forEach(item => {
+    const menuBtn = item.querySelector('.menu-btn');
+    const contextMenu = item.querySelector('.context-menu');
+    const pinBtn = item.querySelector('.pin-btn');
+
+    // Menu button click
+    menuBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        // Close other menus
+        document.querySelectorAll('.context-menu').forEach(menu => {
+            if (menu !== contextMenu) menu.classList.remove('open');
+        });
+        contextMenu.classList.toggle('open');
+    });
+
+    // Context menu actions
+    item.querySelectorAll('.context-item').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const action = btn.dataset.action;
+            const id = item.dataset.id;
+            
+            switch(action) {
+                case 'open':
+                    messageInput.value = `Loading chat #${id}...`;
+                    closeSidebar();
+                    break;
+                case 'rename':
+                    const newName = prompt('Rename chat:', item.querySelector('.history-text').textContent);
+                    if (newName) {
+                        item.querySelector('.history-text').textContent = newName;
+                    }
+                    break;
+                case 'pin':
+                    pinBtn.classList.toggle('pinned');
+                    btn.textContent = pinBtn.classList.contains('pinned') ? 'Unpin' : 'Pin';
+                    break;
+                case 'delete':
+                    if (confirm('Delete this chat?')) {
+                        item.style.animation = 'fadeOut 0.3s ease-out';
+                        setTimeout(() => item.remove(), 300);
+                    }
+                    break;
+            }
+            contextMenu.classList.remove('open');
+        });
+    });
+
+    // Pin button click
+    pinBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        pinBtn.classList.toggle('pinned');
+    });
+
+    // History item click (open)
+    item.addEventListener('click', () => {
+        messageInput.value = `Loading chat #${item.dataset.id}...`;
+        closeSidebar();
+    });
+});
+
+// Close context menus when clicking outside
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.history-item')) {
+        document.querySelectorAll('.context-menu').forEach(menu => {
+            menu.classList.remove('open');
+        });
+    }
+});
+
+// Search history
+sidebarSearch.addEventListener('input', (e) => {
+    const query = e.target.value.toLowerCase();
+    document.querySelectorAll('.history-item').forEach(item => {
+        const text = item.querySelector('.history-text').textContent.toLowerCase();
+        item.style.display = text.includes(query) ? '' : 'none';
+    });
+});
+
+// Section collapse/expand
+document.querySelectorAll('.section-collapse').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const section = btn.dataset.section;
+        const content = document.getElementById(section + 'Content');
+        btn.classList.toggle('collapsed');
+        content.style.display = btn.classList.contains('collapsed') ? 'none' : 'flex';
+    });
+});
+
+// Navigation items
+document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+        item.classList.add('active');
+        closeSidebar();
+    });
+});
+
+// Add fadeOut animation
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes fadeOut {
+        from { opacity: 1; transform: translateX(0); }
+        to { opacity: 0; transform: translateX(-10px); }
+    }
+`;
+document.head.appendChild(style);
+
 // ============================================================================
 // THEME MANAGEMENT
 // ============================================================================
@@ -898,41 +2076,104 @@ initTheme();
 document.getElementById('themeToggle').addEventListener('click', () => {
     document.documentElement.classList.toggle('dark');
     const isDark = document.documentElement.classList.contains('dark');
-    localStorage.setItem('chat_theme', isDark ? 'dark' : 'light');
     document.getElementById('themeToggle').textContent = isDark ? '☀️' : '🌙';
+    localStorage.setItem('chat_theme', isDark ? 'dark' : 'light');
 });
 
 // ============================================================================
-// CONVERSATION STATE
+// MODEL/MODE SELECTOR
 // ============================================================================
 
-const conversation = document.getElementById('conversation');
-const messageInput = document.getElementById('messageInput');
-const sendBtn = document.getElementById('sendBtn');
-const chatTitle = document.getElementById('chatTitle');
-const chatStatus = document.getElementById('chatStatus');
-const emptyState = document.getElementById('emptyState');
-const clearChatBtn = document.getElementById('clearChatBtn');
-const attachBtn = document.getElementById('attachBtn');
-const fileInput = document.getElementById('fileInput');
-const attachmentPreview = document.getElementById('attachmentPreview');
+function updateSelectorDisplay() {
+    selectorDisplay.textContent = `${modelIcons[currentModel]} ${modelNames[currentModel]} · ${modeNames[currentMode]} ▾`;
+}
 
-let messages = [];
-let attachments = [];
-let isLoading = false;
+modelModeBtn.addEventListener('click', () => {
+    selectorModal.classList.add('open');
+});
+
+selectorModal.addEventListener('click', (e) => {
+    if (e.target === selectorModal) {
+        selectorModal.classList.remove('open');
+    }
+});
+
+// Model selection
+document.querySelectorAll('.model-option').forEach(option => {
+    option.addEventListener('click', () => {
+        const newModel = option.dataset.model;
+        currentModel = newModel;
+
+        // Update checkmarks
+        document.querySelectorAll('.model-option').forEach(opt => {
+            const checkmark = opt.querySelector('.option-checkmark');
+            if (opt.dataset.model === newModel) {
+                opt.classList.add('selected');
+                checkmark.style.display = 'block';
+            } else {
+                opt.classList.remove('selected');
+                checkmark.style.display = 'none';
+            }
+        });
+
+        updateSelectorDisplay();
+    });
+});
+
+// Mode selection
+document.querySelectorAll('.mode-option').forEach(option => {
+    option.addEventListener('click', () => {
+        const newMode = option.dataset.mode;
+        currentMode = newMode;
+
+        // Update checkmarks
+        document.querySelectorAll('.mode-option').forEach(opt => {
+            const checkmark = opt.querySelector('.option-checkmark');
+            if (opt.dataset.mode === newMode) {
+                opt.classList.add('selected');
+                checkmark.style.display = 'block';
+            } else {
+                opt.classList.remove('selected');
+                checkmark.style.display = 'none';
+            }
+        });
+
+        updateSelectorDisplay();
+    });
+});
+
+// Close modal when selection is made
+document.querySelectorAll('.model-option, .mode-option').forEach(option => {
+    option.addEventListener('click', () => {
+        setTimeout(() => {
+            selectorModal.classList.remove('open');
+        }, 100);
+    });
+});
 
 // ============================================================================
-// AUTO-RESIZE TEXTAREA
+// SEND MESSAGE
 // ============================================================================
 
-messageInput.addEventListener('input', () => {
+function sendMessage() {
+    const text = messageInput.value.trim();
+    if (!text) return;
+
+    emptyState.style.display = 'none';
+    addMessage(text, 'user');
+    messageInput.value = '';
     messageInput.style.height = 'auto';
-    messageInput.style.height = Math.min(messageInput.scrollHeight, 120) + 'px';
-});
+    
+    // Simulate AI response
+    addTypingIndicator();
+    setTimeout(() => {
+        removeTypingIndicator();
+        const response = generateAIResponse(text);
+        addMessage(response, 'assistant');
+    }, 1500);
+}
 
-// ============================================================================
-// SEND MESSAGE (Enter key)
-// ============================================================================
+sendBtn.addEventListener('click', sendMessage);
 
 messageInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -941,96 +2182,30 @@ messageInput.addEventListener('keydown', (e) => {
     }
 });
 
-sendBtn.addEventListener('click', sendMessage);
-
-function sendMessage() {
-    const text = messageInput.value.trim();
-    
-    if (!text || isLoading) return;
-
-    // Add user message
-    addMessage(text, 'user');
-    messageInput.value = '';
+messageInput.addEventListener('input', () => {
     messageInput.style.height = 'auto';
-    attachments = [];
-    attachmentPreview.classList.remove('show');
-    attachmentPreview.innerHTML = '';
-
-    // Remove empty state on first message
-    if (messages.length === 1) {
-        emptyState.style.display = 'none';
-    }
-
-    // Update title
-    chatTitle.textContent = text.substring(0, 40) + (text.length > 40 ? '...' : '');
-    chatStatus.textContent = 'Chat ongoing';
-
-    // Simulate AI thinking & response
-    chatStatus.textContent = 'Thinking...';
-    isLoading = true;
-    sendBtn.disabled = true;
-
-    addTypingIndicator();
-
-    // Simulate API call delay (2-3 seconds)
-    setTimeout(() => {
-        removeTypingIndicator();
-        const aiResponse = generateAIResponse(text);
-        addMessage(aiResponse, 'assistant');
-        chatStatus.textContent = 'Ready to chat';
-        isLoading = false;
-        sendBtn.disabled = false;
-        scrollToBottom();
-    }, 2000 + Math.random() * 1000);
-}
+    messageInput.style.height = messageInput.scrollHeight + 'px';
+});
 
 // ============================================================================
-// ADD MESSAGE TO CONVERSATION
+// ADD MESSAGE
 // ============================================================================
 
 function addMessage(text, role) {
     const messageGroup = document.createElement('div');
     messageGroup.className = `message-group ${role}`;
 
-    // Avatar
     const avatar = document.createElement('div');
     avatar.className = `message-avatar ${role}`;
-    avatar.textContent = role === 'user' ? 'You' : 'C';
+    avatar.textContent = role === 'user' ? 'Y' : 'C';
 
-    // Content wrapper
     const contentWrapper = document.createElement('div');
     contentWrapper.className = 'message-content';
 
-    // Message bubble
     const bubble = document.createElement('div');
     bubble.className = 'message-bubble';
     bubble.innerHTML = formatMessage(text);
-
-    // Actions (for assistant messages)
-    if (role === 'assistant') {
-        const actions = document.createElement('div');
-        actions.className = 'message-actions';
-        actions.innerHTML = `
-            <button class="message-action-btn copy-btn" title="Copy">📋 Copy</button>
-            <button class="message-action-btn regen-btn" title="Regenerate">🔄 Retry</button>
-        `;
-
-        actions.querySelector('.copy-btn').addEventListener('click', () => {
-            navigator.clipboard.writeText(text);
-            const btn = actions.querySelector('.copy-btn');
-            btn.textContent = '✓ Copied';
-            setTimeout(() => { btn.textContent = '📋 Copy'; }, 2000);
-        });
-
-        actions.querySelector('.regen-btn').addEventListener('click', () => {
-            console.log('Regenerate message - ready for backend integration');
-        });
-
-        contentWrapper.appendChild(bubble);
-        contentWrapper.appendChild(actions);
-    } else {
-        contentWrapper.appendChild(bubble);
-    }
+    contentWrapper.appendChild(bubble);
 
     // Timestamp
     const timestamp = document.createElement('div');
@@ -1286,6 +2461,7 @@ document.querySelectorAll('.prompt-chip').forEach(chip => {
 
 window.addEventListener('load', () => {
     scrollToBottom();
+    updateSelectorDisplay();
     // Show helper hint on mobile
     if (window.innerWidth <= 768) {
         document.getElementById('helperHint').classList.add('show');
@@ -1315,6 +2491,8 @@ console.log('- Connect file attachments to upload endpoint');
 console.log('- Integrate message history with database');
 console.log('- Add real model selection & parameters');
 console.log('- Connect message regeneration logic');
+console.log('Current Model:', currentModel);
+console.log('Current Mode:', currentMode);
 </script>
 
 </body>
